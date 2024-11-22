@@ -8,34 +8,60 @@
 import XCTest
 
 final class AutomationAssessmentUITests: XCTestCase {
+    var app: XCUIApplication!
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
+        try super.setUpWithError()
+        app = XCUIApplication()
+        app.launch()
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        app.terminate()
+        app = nil
+        try super.tearDownWithError()
     }
 
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testScenarioOne() throws {
+        let homePage = TestingPageModel(app: app)
+        homePage.waitForPage()
     }
-
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
+    
+    func testScenarioTwo() throws {
+        let pageModel = TestingPageModel(app: app)
+        pageModel.verifyRefreshButtonUpdatesLastUpdated()
+    }
+    
+    func testScenarioThree() throws {
+        let pageModel = TestingPageModel(app: app)
+        pageModel.verifyTopicSelection(topic: "Technology")
+    }
+    
+    func testScenarioFour() throws {
+        let pageModel = TestingPageModel(app: app)
+        pageModel.verifyTopicSelection(topic: "Technology")
+            .verifyTechnologyContentNavigation()
+    }
+    
+    func testScenarioFive() throws {
+        let pageModel = TestingPageModel(app: app)
+        pageModel.verifyTopicSelection(topic: "TV Guide")
+            .verifyAlertDialog(tapOption: "No")
+            .waitForPage()
+    }
+    
+    func testScenarioSix() throws {
+        let pageModel = TestingPageModel(app: app)
+        pageModel.verifyTopicSelection(topic: "TV Guide")
+            .verifyAlertDialog(tapOption: "Yes")
+            .verifyContentPageNavigation()
+            .waitForPage()
+    }
+    
+    func testScenarioSeven() throws {
+        let pageModel = TestingPageModel(app: app)
+        pageModel.tapBreakingNewsAndVerifyError()
+            .verifyStableAppState()
     }
 }
