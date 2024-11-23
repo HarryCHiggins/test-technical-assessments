@@ -16,4 +16,8 @@ extension XCUIElement{
         let result = XCTWaiter.wait(for: [expectation], timeout: timeout)
         return result == .completed && !self.exists
     }
+    
+    func waitForElement(description: String, timeout: TimeInterval) {
+            XCTAssertTrue(self.waitForExistence(timeout: timeout), "\(description) does not exist within \(timeout) seconds")
+        }
 }
