@@ -41,6 +41,7 @@
         func testScenarioFour() throws {
             let pageModel = TestingPageModel(app: app)
             pageModel.verifyTopicSelection(topic: "Technology")
+                .tagNavigationTap(topic: "Technology")
                 .verifyTechnologyContentNavigation()
                 .waitForPage()
         }
@@ -48,6 +49,7 @@
         func testScenarioFive() throws {
             let pageModel = TestingPageModel(app: app)
             pageModel.verifyTopicSelection(topic: "TV Guide")
+                .tagNavigationTap(topic: "TV Guide")
                 .verifyAlertDialog(tapOption: "No")
                 .waitForPage()
         }
@@ -55,6 +57,7 @@
         func testScenarioSix() throws {
             let pageModel = TestingPageModel(app: app)
             pageModel.verifyTopicSelection(topic: "TV Guide")
+                .tagNavigationTap(topic: "TV Guide")
                 .verifyAlertDialog(tapOption: "Yes")
                 .verifyContentPageNavigation()
                 .waitForPage()

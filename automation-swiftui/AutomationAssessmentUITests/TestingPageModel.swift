@@ -46,6 +46,7 @@ struct TestingPageModel: Page {
 
     @discardableResult
     func verifyRefreshButtonUpdatesLastUpdated() -> Self {
+        
         // Verify initial state
         lastUpdated.waitForElement(description: "LastUpdated", timeout: standardTimeout)
         let initialLastUpdated = lastUpdated.label
@@ -54,16 +55,15 @@ struct TestingPageModel: Page {
         // Perform refresh
         refreshButton.tap()
         
-        // Verify loading state and wait for completion
+        // Verify loading state and wait for completion using helper method
         let loadingIndicator = app.activityIndicators.firstMatch
         loadingIndicator.waitForElement(description: "Loading Indicator", timeout: standardTimeout)
         let loadingDisappeared = loadingIndicator.waitForNonExistance(timeout: standardTimeout)
-        XCTAssertTrue(loadingDisappeared, "Loading indicator did not disappear within 10 seconds")
+        XCTAssertTrue(loadingDisappeared, "Loading indicator did not disappear within 5 seconds")
         
         // Verify updated state
         lastUpdated.waitForElement(description: "Last Updated after refresh", timeout: standardTimeout)
         let newLastUpdated = lastUpdated.label
-        
         XCTAssertFalse(newLastUpdated.isEmpty, "New last updated time is empty")
         XCTAssertNotEqual(newLastUpdated, initialLastUpdated, "Last updated time did not change after refresh")
         
@@ -72,6 +72,7 @@ struct TestingPageModel: Page {
     
     @discardableResult
     func verifyTopicSelection(topic: String) -> Self {
+        
         // Find the Tag Picker
         tagPicker.waitForElement(description: "Tag Picker", timeout: standardTimeout)
         tagPicker.tap()
@@ -81,17 +82,12 @@ struct TestingPageModel: Page {
         topicOption.waitForElement(description: "Topic Option", timeout: standardTimeout)
         topicOption.tap()
         
-        // Verify that the tagNavigation has the correct label
-        XCTAssertTrue(tagNavigation.waitForExistence(timeout: standardTimeout), "Go to \(topic) link not found")
-        XCTAssertEqual(tagNavigation.label, "Go to \(topic)", "Tag Navigation label has the incorrect text")
-        
         return self
     }
     
     @discardableResult
     func verifyTechnologyContentNavigation() -> Self {
-        tagNavigation.tap()
-        
+    
         // Verify content loaded
         contentText.waitForElement(description: "Content Text", timeout: standardTimeout)
         
@@ -112,21 +108,20 @@ struct TestingPageModel: Page {
         
         XCTAssertTrue(foundEndText, "End text does not exist")
         
-        // Navigate back
-        backButton.waitForElement(description: "Back Button", timeout: standardTimeout)
-        backButton.tap()
+        // Check that the backButton exists and navigate back
+        self.backButtonTap()
         
         return self
     }
     
     @discardableResult
     func verifyAlertDialog(tapOption: String) -> Self {
-        tagNavigation.tap()
         
         // Detect and verify the alert
         let alert = app.alerts.firstMatch
         alert.waitForElement(description: "Alert", timeout: standardTimeout)
         
+        // Verify that the alert button has the correct option
         let button = alert.buttons[tapOption]
         XCTAssertTrue(button.exists, "\(tapOption) button not found in alert")
         button.tap()
@@ -136,8 +131,20 @@ struct TestingPageModel: Page {
     }
     
     @discardableResult
-    func verifyContentPageNavigation() -> Self {
-        contentText.waitForElement(description: "Content Text", timeout: standardTimeout)
+    func tagNavigationTap(topic: String) -> Self {
+        
+        // Verify that the tagNavigation has the correct label and click it
+        XCTAssertTrue(tagNavigation.waitForExistence(timeout: standardTimeout), "Go to \(topic) link not found")
+        XCTAssertEqual(tagNavigation.label, "Go to \(topic)", "Tag Navigation label has the incorrect text")
+        tagNavigation.tap()
+        
+        return self
+    }
+    
+    @discardableResult
+    func backButtonTap() -> Self {
+        
+        // Verify that the backButton exists and click it
         backButton.waitForElement(description: "Back Button", timeout: standardTimeout)
         backButton.tap()
         
@@ -145,23 +152,37 @@ struct TestingPageModel: Page {
     }
     
     @discardableResult
+    func verifyContentPageNavigation() -> Self {
+        
+        // Check that the contentText exists
+        contentText.waitForElement(description: "Content Text", timeout: standardTimeout)
+        
+        // Check that the back button exists and click it
+        self.backButtonTap()
+        
+        return self
+    }
+    
+    @discardableResult
     func tapBreakingNewsAndVerifyError() -> Self {
+        
+        // Verify that the footer exists and click it
         homeFooterButton.waitForElement(description: "Home Footer Button", timeout: standardTimeout)
         homeFooterButton.tap()
         
-        let alert = app.alerts.firstMatch
-        alert.waitForElement(description: "Alert", timeout: standardTimeout)
-        let okButton = alert.buttons["Ok"]
-        okButton.waitForElement(description: "Ok Button", timeout: standardTimeout)
-        okButton.tap()
+        // Verify the alert has the correct label and click it using our earlier defined method
+        self.verifyAlertDialog(tapOption: "Ok")
         
         return self
     }
     
     @discardableResult
     func verifyStableAppState() -> Self {
+        
+        // Check HomePage state is correct
         self.waitForPage()
         
+        // Check that an element on the page is interactable
         tagPicker.tap()
         let anyTopicOption = app.buttons.firstMatch
         anyTopicOption.waitForElement(description: "Topic Picker", timeout: standardTimeout)
