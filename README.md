@@ -20,10 +20,7 @@ This repository contains a sample mobile application implemented for iOS. It dem
 2. **Open the Project in the XCode**:  
    - Open the `automation-swiftui` project in **Xcode**.
 
-3. **Run the tests**:
-   Either:
-      - Navigate to Product -> Test
-   Or:
-      - CMD + U
+3. **Run the tests**
+      - Navigate to Product -> Test (or CMD+U)
 
 ---
