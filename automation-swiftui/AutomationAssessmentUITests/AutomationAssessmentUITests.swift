@@ -50,7 +50,7 @@
             let pageModel = TestingPageModel(app: app)
             pageModel.verifyTopicSelection(topic: "TV Guide")
                 .tagNavigationTap(topic: "TV Guide")
-                .verifyAlertDialog(tapOption: "No")
+                .verifyAlertDialog(alertLabel: "Do you have a TV license?", tapOption: "No")
                 .waitForPage()
         }
         
@@ -58,7 +58,7 @@
             let pageModel = TestingPageModel(app: app)
             pageModel.verifyTopicSelection(topic: "TV Guide")
                 .tagNavigationTap(topic: "TV Guide")
-                .verifyAlertDialog(tapOption: "Yes")
+                .verifyAlertDialog(alertLabel: "Do you have a TV license?", tapOption: "Yes")
                 .verifyContentPageNavigation()
                 .waitForPage()
         }

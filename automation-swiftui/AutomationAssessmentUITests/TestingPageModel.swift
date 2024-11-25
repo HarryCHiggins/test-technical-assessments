@@ -115,11 +115,12 @@ struct TestingPageModel: Page {
     }
     
     @discardableResult
-    func verifyAlertDialog(tapOption: String) -> Self {
+    func verifyAlertDialog(alertLabel: String ,tapOption: String) -> Self {
         
         // Detect and verify the alert
         let alert = app.alerts.firstMatch
         alert.waitForElement(description: "Alert", timeout: standardTimeout)
+        XCTAssertEqual(alert.label, alertLabel, "Alert Label is incorrect")
         
         // Verify that the alert button has the correct option
         let button = alert.buttons[tapOption]
@@ -156,7 +157,7 @@ struct TestingPageModel: Page {
         
         // Check that the contentText exists
         contentText.waitForElement(description: "Content Text", timeout: standardTimeout)
-        
+
         // Check that the back button exists and click it
         self.backButtonTap()
         
@@ -171,7 +172,7 @@ struct TestingPageModel: Page {
         homeFooterButton.tap()
         
         // Verify the alert has the correct label and click it using our earlier defined method
-        self.verifyAlertDialog(tapOption: "Ok")
+        self.verifyAlertDialog(alertLabel: "Something has gone wrong" ,tapOption: "Ok")
         
         return self
     }
