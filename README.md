@@ -22,5 +22,7 @@ This repository contains a sample mobile application implemented for iOS. It dem
 
 3. **Run the tests**
       - Navigate to Product -> Test (or CMD+U)
+  
+If you have any issues with a failed build, check that the Team assigned to the targets under Signing & Capabilities is a valid team
 
 ---
