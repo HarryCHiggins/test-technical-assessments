@@ -1,2 +1,0 @@
-#  iOS Test Automation
-
