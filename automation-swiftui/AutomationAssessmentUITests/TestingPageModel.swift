@@ -144,6 +144,8 @@ struct TestingPageModel: Page {
     
     @discardableResult
     func tagNavigationTap() -> Self {
+        
+        tagNavigation.waitForElement(description: "Tag Navigation", timeout: standardTimeout)
         tagNavigation.tap()
         
         return self
